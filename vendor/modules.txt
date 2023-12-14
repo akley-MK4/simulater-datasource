@@ -1,5 +1,6 @@
 # github.com/akley-MK4/go-tools-box v1.0.0-pre
 ## explicit; go 1.19
+github.com/akley-MK4/go-tools-box/netaic
 github.com/akley-MK4/go-tools-box/signal
 # github.com/akley-MK4/pep-coroutine v1.0.2-pre
 ## explicit; go 1.19

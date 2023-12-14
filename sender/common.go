@@ -3,6 +3,7 @@ package sender
 import (
 	"errors"
 	"fmt"
+	"github.com/akley-MK4/go-tools-box/netaic"
 	"io"
 	"net"
 )
@@ -47,6 +48,9 @@ func CreateIOWriter(network string, srcInterfaceName string, dstIp string, dstPo
 		retIoWriter, retErr = net.DialIP(network, lAddr, &net.IPAddr{
 			IP: dstNIP,
 		})
+		if retErr != nil {
+			retErr = fmt.Errorf("DialIP Failed, LAddr: %v, Err: %v", srcIP, retErr)
+		}
 		return
 	}
 
@@ -59,16 +63,5 @@ func GetInterfaceIp(interfaceName string) (retIp string, retErr error) {
 		return
 	}
 
-	interfaceInfo, findErr := FindInterfaceInfoByName(interfaceName)
-	if findErr != nil {
-		retErr = findErr
-		return
-	}
-	interfaceAddress, addrErr := interfaceInfo.Addrs()
-	if addrErr != nil {
-		retErr = addrErr
-		return
-	}
-	retIp = interfaceAddress[0].String()
-	return
+	return netaic.GetNetInterfaceAddr(interfaceName)
 }

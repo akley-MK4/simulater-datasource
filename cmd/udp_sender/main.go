@@ -10,6 +10,9 @@ import (
 	"time"
 )
 
+// 1万多个packets / 秒
+//  upd-sender -dst_ip=172.0.3.22 -dst_port=9991 -max_send_packets_num_sec=600 -max_sender_num=20 -payload_size=256 upd-sender -dst_ip=172.0.3.22 -dst_port=9991 -max_send_packets_num_sec=600 -max_sender_num=20 -payload_size=256
+
 func main() {
 	// -max_sender_num=10 -dst_ip=127.0.0.1 -dst_port=8080 -payload_size=1000 -max_send_packets_num_sec=500
 	maxSenderNum := flag.Int("max_sender_num", 0, "max_sender_num=1")
