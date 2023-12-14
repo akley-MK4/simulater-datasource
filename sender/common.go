@@ -37,19 +37,19 @@ func CreateIOWriter(network string, srcInterfaceName string, dstIp string, dstPo
 		return nil, getSrcIpErr
 	}
 
-	var lAddr *net.IPAddr
+	var lAddr *net.UDPAddr
 	if srcIP != "" {
-		lAddr = &net.IPAddr{
+		lAddr = &net.UDPAddr{
 			IP: net.ParseIP(srcIP),
 		}
 	}
 
 	if lAddr != nil {
-		retIoWriter, retErr = net.DialIP(network, lAddr, &net.IPAddr{
+		retIoWriter, retErr = net.DialUDP(network, lAddr, &net.UDPAddr{
 			IP: dstNIP,
 		})
 		if retErr != nil {
-			retErr = fmt.Errorf("DialIP Failed, LAddr: %v, Err: %v", srcIP, retErr)
+			retErr = fmt.Errorf("DialUDP Failed, LAddr: %v, Err: %v", srcIP, retErr)
 		}
 		return
 	}
