@@ -15,6 +15,7 @@ func NewUDPSender(mgr *Mgr, interval time.Duration, args ...interface{}) (ISende
 	dstPort := args[2].(uint16)
 	payloadSize := args[3].(uint16)
 	maxSendPacketsNumSec := args[4].(int)
+	totalMaxSentPacketsNum := args[5].(int)
 
 	if dstPort <= 0 || payloadSize <= 0 {
 		return nil, errors.New("invalid parameter")
@@ -39,6 +40,7 @@ func NewUDPSender(mgr *Mgr, interval time.Duration, args ...interface{}) (ISende
 	sender.ioWriter = ioWriter
 	sender.payloadSize = payloadSize
 	sender.maxSendPacketsNumSec = maxSendPacketsNumSec
+	sender.totalMaxSentPacketsNum = uint64(totalMaxSentPacketsNum)
 	sender.payload = make([]byte, payloadSize)
 
 	return sender, nil
@@ -50,12 +52,14 @@ type UDPSender struct {
 	//dstPort uint16
 	mgr *Mgr
 
-	maxSendPacketsNumSec int
-	payloadSize          uint16
-	payload              []byte
-	interval             time.Duration
-	ioWriter             io.Writer
-	co                   PCI.ICoroutine
+	maxSendPacketsNumSec   int
+	payloadSize            uint16
+	payload                []byte
+	interval               time.Duration
+	ioWriter               io.Writer
+	co                     PCI.ICoroutine
+	totalMaxSentPacketsNum uint64
+	totalSentPacketsNum    uint64
 }
 
 func (t *UDPSender) Start() error {
@@ -85,6 +89,10 @@ func (t *UDPSender) sendPeriodically(_ PCD.CoId, args ...interface{}) bool {
 
 		statsHandler.AddTotalSentPacketsNum(1)
 		statsHandler.AddTotalSentPacketsBytes(uint64(n))
+		t.totalSentPacketsNum++
+		if t.totalMaxSentPacketsNum > 0 && (t.totalSentPacketsNum >= t.totalMaxSentPacketsNum) {
+			return false
+		}
 	}
 
 	return true

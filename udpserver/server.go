@@ -5,6 +5,7 @@ import (
 	"log"
 	"net"
 	"runtime/debug"
+	"time"
 )
 
 const (
@@ -22,9 +23,12 @@ type UDPServer struct {
 	listenAddr *net.UDPAddr
 	conn       *net.UDPConn
 	readBuf    []byte
+
+	intervalPrintStatsSec   int
+	totalReceivedPacketsNum uint64
 }
 
-func (t *UDPServer) Initialize(addr string) error {
+func (t *UDPServer) Initialize(addr string, intervalPrintStatsSec int) error {
 	lAddr, err := net.ResolveUDPAddr("", addr)
 	if err != nil {
 		return err
@@ -32,6 +36,7 @@ func (t *UDPServer) Initialize(addr string) error {
 
 	t.readBuf = make([]byte, readBufSize)
 	t.listenAddr = lAddr
+	t.intervalPrintStatsSec = intervalPrintStatsSec
 	return nil
 }
 
@@ -40,6 +45,19 @@ func (t *UDPServer) Start() error {
 		return err
 	}
 	t.watchReader()
+	if t.intervalPrintStatsSec > 0 {
+		go func() {
+			totalReceivedPacketsNum := uint64(0)
+			for {
+				time.Sleep(time.Second * time.Duration(t.intervalPrintStatsSec))
+				if totalReceivedPacketsNum == t.totalReceivedPacketsNum {
+					continue
+				}
+				totalReceivedPacketsNum = t.totalReceivedPacketsNum
+				log.Printf("TotalReceivedPacketsNum=%d\n", totalReceivedPacketsNum)
+			}
+		}()
+	}
 
 	return nil
 }
@@ -60,6 +78,9 @@ func (t *UDPServer) Listen() error {
 
 func (t *UDPServer) watchReader() {
 	go t.readForever()
+	go func() {
+
+	}()
 }
 
 func (t *UDPServer) readForever() {
@@ -84,5 +105,6 @@ func (t *UDPServer) read() bool {
 		return false
 	}
 
+	t.totalReceivedPacketsNum++
 	return false
 }

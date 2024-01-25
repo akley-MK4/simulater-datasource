@@ -1,0 +1,12 @@
+{
+  "GroupSendConfigList": [
+    {
+      "beforeSendWaitRangeMs": 0,
+      "srcInterface": "",
+      "dstIp": "172.0.3.11",
+      "dstPort": 9991,
+      "payloadSize": 500,
+      "maxSendPacketsNumSec": 1000
+    }
+  ]
+}

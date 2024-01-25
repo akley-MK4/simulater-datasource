@@ -12,11 +12,12 @@ import (
 func main() {
 	// -max_sender_num=10 -dst_ip=127.0.0.1 -dst_port=8080 -payload_size=1000 -max_send_packets_num_sec=500
 	addr := flag.String("addr", "0.0.0.0:9991", "addr=")
+	intervalPrintStatsSec := flag.Int("interval_print_stats_sec", 0, "interval_print_stats_sec=")
 	flag.Parse()
 
 	udpSvr := udpserver.UDPServer{}
 
-	if err := udpSvr.Initialize(*addr); err != nil {
+	if err := udpSvr.Initialize(*addr, *intervalPrintStatsSec); err != nil {
 		log.Println("Failed to initialize UDPServer, ", err.Error())
 		os.Exit(1)
 	}

@@ -19,14 +19,15 @@ func main() {
 	network := flag.String("network", "udp", "network=udp")
 	intervalMillisecond := flag.Int("interval_millisecond", 1000, "interval_millisecond=1")
 	srcInterfaceName := flag.String("src_interface_name", "", "src_interface_name=eth0")
-	dstIp := flag.String("dst_ip", "", "dst_ip=127.0.0.1")
+	dstIp := flag.String("dst_ip", "127.0.0.1", "dst_ip=127.0.0.1")
 	dstPort := flag.Int("dst_port", 0, "dst_port=8080")
 	payloadSize := flag.Int("payload_size", 1024, "payload_size=1024")
 	maxSendPacketsNumSec := flag.Int("max_send_packets_num_sec", 600, "max_send_packets_num_sec=600")
+	totalMaxSentPacketsNum := flag.Int("total_max_sent_packets_num", 0, "total_max_sent_packets_num=600")
 	flag.Parse()
 
 	mgr, newMgrErr := sender.NewMgr(*maxSenderNum, *network, time.Duration(*intervalMillisecond)*time.Millisecond,
-		*srcInterfaceName, *dstIp, uint16(*dstPort), uint16(*payloadSize), *maxSendPacketsNumSec)
+		*srcInterfaceName, *dstIp, uint16(*dstPort), uint16(*payloadSize), *maxSendPacketsNumSec, *totalMaxSentPacketsNum)
 	if newMgrErr != nil {
 		log.Println("Failed to create a sender mgr, ", newMgrErr.Error())
 		os.Exit(1)
