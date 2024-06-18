@@ -66,19 +66,19 @@ func NewUDPEchoServer(srcPort uint16, dstAddr string) (*UDPEchoServer, error) {
 	if errLAddr != nil {
 		return nil, errLAddr
 	}
-	rAddr, errRAddr := net.ResolveUDPAddr("udp", dstAddr)
-	if errRAddr != nil {
-		return nil, errRAddr
-	}
-
-	//conn, errConn := net.ListenUDP("udp", lAddr)
-	//if errConn != nil {
-	//	return nil, errConn
+	//rAddr, errRAddr := net.ResolveUDPAddr("udp", dstAddr)
+	//if errRAddr != nil {
+	//	return nil, errRAddr
 	//}
-	conn, errConn := net.DialUDP("udp", lAddr, rAddr)
+
+	conn, errConn := net.ListenUDP("udp", lAddr)
 	if errConn != nil {
 		return nil, errConn
 	}
+	//conn, errConn := net.DialUDP("udp", lAddr, rAddr)
+	//if errConn != nil {
+	//	return nil, errConn
+	//}
 
 	server := &UDPEchoServer{
 		lAddr:      lAddr,
@@ -117,7 +117,7 @@ func (t *UDPEchoServer) accept() {
 			continue
 		}
 
-		if _, err := t.listenConn.Write(readBuf[:n]); err != nil {
+		if _, err := t.listenConn.WriteToUDP(readBuf[:n], addr); err != nil {
 			log.Printf("Failed to Respond the message to remote address %v, SeqNumber: %d, MessageType: %v, Err: %v\n",
 				addr.String(), msg.SeqNum, msg.MsgType, err)
 			continue
