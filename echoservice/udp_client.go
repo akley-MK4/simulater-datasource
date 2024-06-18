@@ -97,9 +97,9 @@ func (t *UDPEchoClient) Connect() error {
 }
 
 func (t *UDPEchoClient) SendMessage(msgType uint16, msgData []byte) (retErr error) {
-	if !t.connected {
-		return errors.New("disconnected State")
-	}
+	//if !t.connected {
+	//	return errors.New("disconnected State")
+	//}
 
 	msg := &Message{
 		SeqNum:  atomic.AddUint64(&t.reqSeqNum, 1),

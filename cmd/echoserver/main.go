@@ -12,11 +12,12 @@ import (
 // -srcPort=9991 -msgQueueCapacity=5
 
 func main() {
-	srcPort := flag.Int("srcPort", 9991, "srcPort=9990")
+	srcPort := flag.Int("srcPort", 9990, "srcPort=9990")
+	dstAddr := flag.String("dstAddr", "", "dstAddr=127.0.0.1:9991")
 
 	flag.Parse()
 
-	server, errServer := echoservice.NewUDPEchoServer(uint16(*srcPort))
+	server, errServer := echoservice.NewUDPEchoServer(uint16(*srcPort), *dstAddr)
 	if errServer != nil {
 		log.Println("Failed to new the server ", errServer.Error())
 		os.Exit(1)

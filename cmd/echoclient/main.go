@@ -31,10 +31,10 @@ func main() {
 	}
 	time.Sleep(time.Millisecond * 10)
 
-	if err := client.Connect(); err != nil {
-		log.Println("Failed to connect the server ", err.Error())
-		os.Exit(1)
-	}
+	//if err := client.Connect(); err != nil {
+	//	log.Println("Failed to connect the server ", err.Error())
+	//	os.Exit(1)
+	//}
 
 	for i := 0; i < *maxSendMsgNumLimit; i++ {
 		if err := client.SendMessage(echoservice.MessageTypeEcho, make([]byte, *msgPayloadSize)); err != nil {
